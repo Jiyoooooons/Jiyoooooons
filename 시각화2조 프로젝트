@@ -1,0 +1,175 @@
+##pie chart
+import matplotlib.pyplot as plt
+import pandas as pd
+df=pd.read_csv("exercise_visit.csv")
+df=df[['자치구별(2)','장소별(1)','2019']]
+df_n=df[:7]
+df_n.rename(columns={'자치구별(2)':'region'},inplace=True)
+df_n.rename(columns={'장소별(1)':'Place'},inplace=True)
+df_n.rename(columns={'2019':'percent'},inplace=True)
+df_n
+df_n.replace(to_replace={'Place':{'공원 및 산 등의 산책로':'Park','민간상업 체육시설':'private sports facilities','직장내 체육시설':'facilities in workplace','학교체육시설':'facilities in school','집에서 간단한 운동':'home','지자체 및 공공기관운영 시설':'public facilities','기타':'etc'}},inplace=True)                                 
+df_n.replace(to_replace={'region':{'소계':'total'}},inplace=True) 
+df_n
+import matplotlib.pyplot as plt
+plt.title('exercise visit Ratio')
+plt.pie(df_n['percent'], labels=df_n['Place'], autopct='%.3f%%')
+plt.show()
+
+##health
+import pandas as pd
+dataset = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/Other_health.csv")
+dataset
+df1=dataset[['자치구별(2)','2021','2021.1']]
+df1
+df1.replace(to_replace={'자치구별(2)':{'종로구':'Jongno-gu','중구':'Jung-gu','강남구':'Gangnam-gu','서초구':'Seocho-gu',
+                                      
+                                      '마포구':'Mapo-gu','용산구':'Yongsan-gu','성동구':'Seongdong-gu','강동구':'Gangdong-gu',
+                                      '송파구':'Songpa-gu','광진구':'Gwangjin-gu','영등포구':'Yeongdeungpo-gu','구로구':'Guro-gu',
+                                      '성북구':'Seongbuk-gu','동작구':'Dongjak-gu','노원구':'Nowon-gu',
+                                      '관악구':'Gwanak-gu','강서구':'Gangseo-gu','은평구':'Eunpyeong-gu','중랑구':'Jungnang-gu',
+                                      '동대문구':'Dongdaemun-gu','서대문구':'Seodaemun-gu','강북구':'Gangbuk-gu','양천구':'Yangcheon-gu',
+                                      '도봉구':'Dobong-gu','금천구':'Geumcheon-gu','소계':'Total'}},inplace=True)
+df1.rename(columns={'자치구별(2)':'Region', '2021':'Hypertension','2021.1':'Diabetes'},inplace=True)
+df2=df1.loc[1:,:]
+df2.index = range(len(df2))
+
+df2
+df_hypertension=df2[['Region','Hypertension']]
+df_hypertension= df_hypertension.sort_values('Hypertension',ascending=True)
+df_hypertension
+df_diabetes=df2[['Region','Diabetes']]
+df_di=df_diabetes.astype({'Diabetes':'float'})
+df_di= df_di.sort_values('Diabetes',ascending=True)
+df_di
+df_hypertension.dtypes
+df_hy=df_hypertension.astype({'Hypertension':'float'})
+df_hy.plot.barh(x='Region',title='Hypertension',fontsize=15, rot=0,figsize=(20,10),alpha=0.7,width=0.7,color='green')
+df_diabetes.dtypes
+df_di.plot.barh(x='Region',title='Diabetes',fontsize=15, rot=0,figsize=(20,10),alpha=0.7,width=0.7,color='green')
+##num of parks
+import pandas as pd
+import seaborn as sns
+dataset = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/seoul_park_1.csv",encoding='cp949')
+dataset.head(10)
+dataset.rename(columns={'자치구별(2)':'Region'},inplace=True)
+dataset
+df=dataset[['Region','2021','2021.1']]
+df
+df1=df.iloc[4:,:]
+df1.index = range(len(df1))
+df1
+df1.info()
+df1=df1.replace('2,959','2959')
+df1=df1.astype({'2021':'int'})
+df1=df1.replace('-','0')
+df1=df1.astype({'2021.1':'int'})
+df1.dtypes
+#소계-중복
+df1['nettotal']=(df1['2021']-df1['2021.1'])
+df1
+df2=df1[['Region','nettotal']]
+df2=df2.loc[1:25,:] #소계, 마지막 서울대공원 빼기
+df2
+df3=df2.sort_values('nettotal',ascending=True)
+df3
+df3.rename(columns={'nettotal':'Num_of_parks'},inplace=True)
+df3.plot.barh(x='Region',title='Num_of_parks',fontsize=15, rot=0,figsize=(20,10),alpha=0.7,width=0.7)
+df1.dtypes
+##obesity rate
+import pandas as pd
+import seaborn as sns
+dataset = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/biman.csv")
+dataset.columns
+dataset.head(10)
+dataset.rename(columns={'자치구별(1)':'Region'},inplace=True)
+dataset.rename(columns={'건강형태별(1)':'Health'},inplace=True)
+dataset=dataset[['Region','Health','2021']]
+dataset 
+df_biman = dataset[dataset['Health'].str.contains('비만율')]
+df_biman.index = range(len(df_biman))
+df_biman.rename(columns={'2021':'Obesity Rate'},inplace=True)
+df_biman=df_biman[['Region','Obesity Rate']]
+df_biman=df_biman.sort_values('Obesity Rate',ascending=True)
+df_biman
+df_biman.replace(to_replace={'Region':{'종로구':'Jongno-gu','중구':'Jung-gu','강남구':'Gangnam-gu','서초구':'Seocho-gu',
+                                      
+                                      '마포구':'Mapo-gu','용산구':'Yongsan-gu','성동구':'Seongdong-gu','강동구':'Gangdong-gu',
+                                      '송파구':'Songpa-gu','광진구':'Gwangjin-gu','영등포구':'Yeongdeungpo-gu','구로구':'Guro-gu',
+                                      '성북구':'Seongbuk-gu','서울시':'Seoul','동작구':'Dongjak-gu','노원구':'Nowon-gu',
+                                      '관악구':'Nowon-gu','강서구':'Gangseo-gu','은평구':'Eunpyeong-gu','중랑구':'Eunpyeong-gu',
+                                      '동대문구':'Dongdaemun-gu','서대문구':'Seodaemun-gu','강북구':'Gangbuk-gu','양천구':'Yangcheon-gu',
+                                      '도봉구':'Dobong-gu','금천구':'Geumcheon-gu'}},inplace=True)
+df_biman
+df_biman.dtypes
+df_biman.plot.barh(x='Region',title='Obesity Rate',fontsize=15, rot=0,figsize=(20,10),alpha=0.7,width=0.7,color='green')
+##plot&heatmap
+import pandas as pd
+df1 = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/Seoul_Park_final.csv")
+df1=df1[['Region','Num_of_parks']]
+df1
+df1=df1.sort_values('Region',ascending=True)
+df1.index = range(len(df1))
+df1
+df2 = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/Obesity Rate_final.csv")
+df2=df2.sort_values('Region',ascending=True)
+df2=df2[['Region','Obesity Rate']]
+df2=df2.sort_values('Region',ascending=True)
+df2.index = range(len(df2))
+df2.rename(columns={'Region':'Region2'},inplace=True)
+df2
+df3 = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/Hypertension_final.csv")
+df3=df3.sort_values('Region',ascending=True)
+df3=df3[['Region','Hypertension']]
+df3=df3.sort_values('Region',ascending=True)
+df3.index = range(len(df3))
+df3.rename(columns={'Region':'Region3'},inplace=True)
+df3
+df4 = pd.read_csv("C:/Users/LG GRAM/Desktop/23-1/23-1 DScover/DATA VIZ/Diabetes_final.csv")
+df4
+df4=df4.sort_values('Region',ascending=True)
+df4=df4[['Region','Diabetes']]
+df4=df4.sort_values('Region',ascending=True)
+df4.index = range(len(df4))
+df4.rename(columns={'Region':'Region4'},inplace=True)
+df4
+df12=pd.concat([df1,df2,df3,df4],axis=1)
+df12=df12[['Region','Num_of_parks','Obesity Rate','Hypertension','Diabetes']]
+df12= df12.set_index("Region")
+df12.rename(columns={'Obesity Rate':'Obesity_Rate'},inplace=True)
+df112=df12.dropna()
+import scipy.stats as stats
+x=df112.Num_of_parks.values
+y=df112.Obesity_Rate.values
+stats.pearsonr(x,y) #공원개수와 비만율 관계 없음, p>0.05
+import seaborn as sns
+sns.regplot(df112['Num_of_parks'], df112['Obesity_Rate'], fit_reg=True) 
+x=df112.Num_of_parks.values
+y=df112.Hypertension.values
+stats.pearsonr(x,y) #공원개수와 고혈압 유의 관계 있음, (-) 관계, p<0.05
+sns.regplot(df112['Num_of_parks'], df112['Hypertension'], fit_reg=True)
+x=df112.Num_of_parks.values
+y=df112.Diabetes.values
+stats.pearsonr(x,y) #공원개수와 당뇨병 유의 관계 있음, (-) 관계, p<0.05
+sns.regplot(df112['Num_of_parks'], df112['Diabetes'], fit_reg=True)
+df5=df112[['Num_of_parks','Obesity_Rate','Hypertension','Diabetes']] #상관관계 분석
+#상관계수 행렬 : 상관계수의 절대값이 1에 가까울수록 상관관계가 크다 : sth.corr()
+df5.corr().round(2)
+sns.heatmap(df5.corr(), annot=True, cmap='RdYlBu_r',
+           vmin=-1, vmax=1)
+#annot=True 각 셀에 해당값을 써넣어라
+#cmap='RdYlBu_r' 셀의 색깔 red yellow blue
+#vmin vmax 상관계수의 최소 최대값 설정 
+# 회귀분석 : 변수간 인과관계가 존재하는가? 
+from statsmodels.formula.api import ols
+reg1=ols('Hypertension~Num_of_parks', df5).fit()
+print(reg1.summary()) #고혈압-공원 수 회귀분석
+reg2=ols('Diabetes~Num_of_parks', df5).fit()
+print(reg2.summary()) #당뇨병-공원수 회귀분석
+sns.pairplot(df5[['Num_of_parks', 'Obesity_Rate', 'Hypertension', 'Diabetes']],
+            kind='reg')
+            
+
+
+
+
